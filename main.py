@@ -65,3 +65,17 @@ training_pad = pad_sequences(training_seq, maxlen=50, padding='post', truncating
 
 testing_seq = token.texts_to_sequences(X_val)
 testing_pad = pad_sequences(testing_seq, maxlen=50, padding='post', truncating='post')
+
+# Building the model with custom layer
+embedding =  16
+model = tf.keras.Sequential([
+    layers.Embedding(max_features +  1, embedding),
+    layers.Dropout(0.2),
+    layers.GlobalAvgPool1D(),
+    layers.Dropout(0.2),
+    layers.Dense(1),
+])
+model.summary()
+
+# Compiling the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
