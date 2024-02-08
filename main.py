@@ -11,6 +11,21 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
+# Custom standardization function
+def custom_standardisation(input_data):
+    lowercase = tf.strings.lower(input_data)
+    stripped_html = tf.strings.regex_replace(lowercase, '<br />', ' ')
+    return tf.strings.regex_replace(stripped_html, '[%s]' % re.escape(string.punctuation), '')
+
+# Vectorization layer
+max_features =  10000
+sequence_length =  250
+vectorize_layer = layers.TextVectorization(
+    standardize=custom_standardisation, max_tokens=max_features,
+    output_mode='int',
+    output_sequence_length=sequence_length
+)
+
 # Load the dataset
 df = pd.read_csv('hate_speech.csv')
 
