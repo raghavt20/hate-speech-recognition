@@ -79,3 +79,36 @@ model.summary()
 
 # Compiling the model
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Callbacks for early stopping and learning rate reduction
+early_stopping = EarlyStopping(patience=3, monitor='val_accuracy', restore_best_weights=True)
+reduce_lr = ReduceLROnPlateau(patience=2, factor=0.5, verbose=0)
+
+# Training the model
+history = model.fit(training_pad, Y_train, epochs=10, batch_size=32, validation_data=(testing_pad, Y_val), callbacks=[early_stopping, reduce_lr])
+
+# Plotting the training and validation accuracy and loss
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs = range(1, len(acc) +  1)
+
+plt.figure(figsize=(12,  6))
+plt.subplot(1,  2,  1)
+plt.plot(epochs, loss, 'bo', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.subplot(1,  2,  2)
+plt.plot(epochs, acc, 'bo', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.show()
