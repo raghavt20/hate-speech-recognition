@@ -112,3 +112,13 @@ plt.ylabel('Accuracy')
 plt.legend()
 
 plt.show()
+
+# User interface for prediction
+user_interfaces = []
+while True:
+    q = input("Enter a review (type 'quit' to exit):\n")
+    if q.lower() == 'quit':
+        break
+    user_interfaces.append(q)
+    p = model.predict(np.array(user_interfaces))
+    print('Negativity score:', p[-1])
